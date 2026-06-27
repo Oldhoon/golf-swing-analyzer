@@ -1,0 +1,129 @@
+# Feature Specification: Foundation & Local Development Environment
+
+**Feature Branch**: `001-foundation-and-dev-environment`
+
+**Created**: 2026-06-27
+
+**Status**: Draft
+
+**Input**: User description: "Draft the foundational spec for this project based on project-context.md — establish the runnable, offline-first local foundation that all later modules (video ingestion, pose estimation, telemetry/heuristics, LLM analysis, persistence) build upon."
+
+## User Scenarios & Testing *(mandatory)*
+
+### User Story 1 - Verified local environment from a clean machine (Priority: P1)
+
+A contributor clones the project onto a local Linux workstation and, following the documented setup, reaches a state where the application launches and a single diagnostic step confirms every required capability is present and working: GPU/hardware acceleration, video processing tooling, pose-estimation runtime, and local storage. They never need cloud access or external services.
+
+**Why this priority**: Nothing else in the roadmap can be built or trusted until the foundation runs locally and its core capabilities are verifiably available. This is the MVP of the foundation itself.
+
+**Independent Test**: On a fresh checkout, run the documented setup and the environment diagnostic; verify it reports a clear pass/fail per required capability and the app starts without errors or network calls.
+
+**Acceptance Scenarios**:
+
+1. **Given** a clean checkout on a supported workstation, **When** the contributor follows the setup instructions, **Then** all declared dependencies install successfully with reproducible, pinned versions.
+2. **Given** a completed setup, **When** the contributor runs the environment diagnostic, **Then** the system reports the status of each required capability (hardware acceleration, video tooling, pose runtime, local storage) as pass or fail with an actionable message for any failure.
+3. **Given** a missing or misconfigured capability (e.g., GPU acceleration unavailable), **When** the diagnostic runs, **Then** the system clearly identifies which capability failed and how to remediate it, without crashing.
+4. **Given** a verified environment, **When** the contributor launches the application, **Then** it starts locally and makes no outbound network requests.
+
+---
+
+### User Story 2 - Diagnosable configuration and logging (Priority: P2)
+
+A contributor needs to change local settings (such as file locations or runtime options) and understand what the system is doing when something goes wrong, using local configuration and structured logs only.
+
+**Why this priority**: Later modules are compute-heavy and failure-prone (video decode, GPU inference). Centralized configuration and structured logging make every subsequent module diagnosable from the start, satisfying the constitution's observability constraint.
+
+**Independent Test**: Change a documented configuration value, restart the app, and confirm the new value takes effect; trigger an error path and confirm a structured log entry with enough context to diagnose it appears locally.
+
+**Acceptance Scenarios**:
+
+1. **Given** documented configuration options, **When** a contributor sets a local override, **Then** the application applies it on next start and reports the effective configuration.
+2. **Given** an invalid configuration value, **When** the application starts, **Then** it fails fast with a clear message naming the offending setting.
+3. **Given** an operation that fails, **When** the failure occurs, **Then** a structured log entry is written locally with sufficient context (operation, inputs summary, error) to diagnose it without reproducing on another machine.
+
+---
+
+### User Story 3 - Quality gates runnable on demand (Priority: P3)
+
+A contributor runs the project's automated quality gates — linting/formatting, the test harness, and the environment diagnostic — with simple, documented commands before submitting changes.
+
+**Why this priority**: The constitution makes code quality and testing non-negotiable. A working harness from day one ensures every later module inherits enforceable gates rather than retrofitting them.
+
+**Independent Test**: Run the documented quality-gate commands on a clean checkout and confirm lint/format, the (initially minimal) test suite, and the diagnostic all execute and report clear pass/fail results.
+
+**Acceptance Scenarios**:
+
+1. **Given** a clean checkout, **When** the contributor runs the lint/format gate, **Then** it executes and reports violations (or a clean result) with zero ambiguous output.
+2. **Given** the test harness, **When** the contributor runs it, **Then** at least one foundational test executes and the runner reports pass/fail and coverage scope.
+3. **Given** the quality gates, **When** any gate fails, **Then** the command exits with a non-zero status suitable for blocking a merge.
+
+---
+
+### Edge Cases
+
+- What happens when the hardware acceleration capability is absent or the driver is incompatible — does the foundation degrade gracefully and report clearly rather than crashing?
+- How does the system behave when video tooling or the pose runtime is installed but the wrong version? The diagnostic must detect version mismatches, not just presence.
+- What happens on first run when local storage or required directories do not yet exist — are they created safely, or is a clear error shown?
+- How does setup behave when an optional capability is missing but the core can still run in a reduced mode?
+- What happens when configuration files are missing entirely — are sensible local defaults used?
+
+## Requirements *(mandatory)*
+
+### Functional Requirements
+
+- **FR-001**: The project MUST provide a documented, reproducible local setup process that installs all required dependencies with pinned versions and no cloud or external-service dependency.
+- **FR-002**: The system MUST establish a clear, documented project structure that accommodates the planned modules (UI, video ingestion, pose estimation, telemetry/heuristics, LLM analysis, persistence) without prescribing their internal implementation.
+- **FR-003**: The system MUST provide an environment diagnostic that checks each required capability — hardware/GPU acceleration, video processing tooling, pose-estimation runtime, and local storage — and reports per-capability pass/fail with actionable remediation guidance.
+- **FR-004**: The environment diagnostic MUST detect not only presence but version compatibility of required capabilities, and MUST NOT crash when a capability is missing or misconfigured.
+- **FR-005**: The application MUST launch locally and operate without making outbound network requests during normal startup and diagnostics.
+- **FR-006**: The system MUST provide centralized, local configuration with sensible defaults, support local overrides, and report the effective configuration at startup.
+- **FR-007**: The system MUST fail fast with a clear, specific message when configuration is invalid.
+- **FR-008**: The system MUST emit structured logs locally with enough context to diagnose failures without reproducing them on another machine.
+- **FR-009**: The system MUST provide runnable quality gates — code formatting/linting, an automated test harness, and the environment diagnostic — invokable via documented commands.
+- **FR-010**: Quality-gate commands MUST return non-zero exit status on failure so they can block merges in the development workflow.
+- **FR-011**: The foundation MUST include at least one passing automated test and a coverage-reporting capability so later modules inherit the testing harness.
+- **FR-012**: First-run setup MUST safely create any required local directories or storage locations, or report a clear error if it cannot.
+- **FR-013**: Setup and diagnostic documentation MUST be discoverable in the repository so a new contributor can reach a verified environment unaided.
+
+### Key Entities *(include if feature involves data)*
+
+- **Environment Diagnostic Report**: The outcome of the capability checks — a per-capability status (pass/fail), detected version, and remediation hint for failures.
+- **Application Configuration**: The effective set of local settings (storage locations, runtime options) resolved from defaults plus local overrides.
+- **Required Capability**: A named external prerequisite the foundation depends on (hardware acceleration, video tooling, pose runtime, local storage), each with a presence and version expectation.
+
+## Non-Functional Requirements *(mandatory)*
+
+### User Experience
+
+- **UX-001**: The environment diagnostic MUST present results in a consistent, scannable format with an unambiguous pass/fail per capability and a single overall verdict.
+- **UX-002**: Every failure (setup, configuration, diagnostic) MUST produce an actionable message that names the problem and the next step; silent failures are not acceptable.
+- **UX-003**: Terminology used in diagnostics, configuration keys, and logs MUST be consistent with the project glossary established in `project-context.md`.
+
+### Performance
+
+- **PERF-001**: The environment diagnostic MUST complete within 10 seconds on the reference workstation so it is cheap to run repeatedly.
+- **PERF-002**: Application startup (excluding one-time dependency installation) MUST reach a ready state within 15 seconds on the reference workstation.
+- **PERF-003**: Running the quality gates on the foundation MUST complete within 60 seconds on the reference workstation to keep the inner development loop fast.
+
+## Success Criteria *(mandatory)*
+
+### Measurable Outcomes
+
+- **SC-001**: A new contributor can go from a clean checkout to a verified, running environment in under 15 minutes of active effort (excluding unattended download/install time).
+- **SC-002**: The environment diagnostic reports a correct pass/fail for 100% of required capabilities, including at least one intentionally broken capability in testing.
+- **SC-003**: The application starts and runs the diagnostic with zero outbound network requests.
+- **SC-004**: All quality gates are runnable with documented single commands and return correct exit statuses on both passing and failing inputs.
+- **SC-005**: At least one automated test runs and passes, and coverage is reported, establishing the testing baseline for later modules.
+
+## Assumptions
+
+- The target environment is a local Linux (Fedora) workstation with an Nvidia GPU, consistent with `project-context.md`; "reference workstation" in performance criteria refers to this class of machine.
+- The concrete technology choices (Python version, UI framework, pose runtime, video tooling) are governed by `project-context.md` and will be finalized during `/speckit-plan`; this spec intentionally states capabilities rather than fixing tools.
+- This foundation does not yet process golf swing videos or produce analysis; it establishes the verified, runnable base and quality harness only. Video, pose, telemetry, LLM, and persistence behavior are deferred to specs 002–008.
+- "No cloud dependencies" applies to runtime; one-time dependency downloads during setup are permitted.
+- Offline-first means all processing and storage happen locally; the foundation must not require connectivity to operate once set up.
+
+## Dependencies
+
+- Governed by the project constitution (`.specify/memory/constitution.md`) for code quality, testing, UX consistency, and performance principles.
+- Aligns with the draft roadmap in `.specify/memory/project-context.md`; this is spec **001**, a prerequisite for all subsequent specs.

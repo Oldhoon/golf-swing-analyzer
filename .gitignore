@@ -1,0 +1,132 @@
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.envrc
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets/
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDEs & editors
+.idea/
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# Logs & runtime
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# Local data & persistence
+*.db
+*.sqlite
+*.sqlite3
+data/
+!data/.gitkeep
+
+# Video & media (uploads, normalized output, frames)
+uploads/
+videos/
+frames/
+output/
+tmp/
+temp/
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.m4v
+
+# ML models & large binaries
+models/
+*.onnx
+*.pt
+*.pth
+*.bin
+*.gguf
+*.safetensors
+
+# UI framework caches
+.streamlit/
+.gradio/
+
+# FFmpeg / processing artifacts
+*.ts
+*.m3u8
+
+# CUDA / build artifacts
+*.cubin
+*.fatbin
+*.ptx
