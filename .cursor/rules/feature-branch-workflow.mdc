@@ -1,0 +1,44 @@
+---
+description: Git branching workflow for Spec Kit feature implementation
+alwaysApply: true
+---
+
+# Feature Branch Workflow
+
+Every spec implementation MUST happen on a feature branch — never directly on `main`.
+
+## When to branch
+
+- Create or checkout the feature branch when starting spec work (`/speckit-specify` through `/speckit-implement`).
+- Branch name SHOULD match the spec directory (e.g. `001-foundation-and-dev-environment`).
+- If the branch does not exist yet, create it from up-to-date `main`:
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b 001-foundation-and-dev-environment
+```
+
+## During implementation
+
+- All commits for a spec (spec, plan, tasks, and code) go on that feature branch.
+- Do not commit implementation work directly to `main`.
+- Keep the branch current with `main` via rebase when needed:
+
+```bash
+git fetch origin
+git rebase origin/main
+```
+
+## Completing a feature
+
+- Rebase onto latest `main`, resolve conflicts, run quality gates, then integrate:
+  - **Preferred**: rebase and fast-forward merge, or open a PR and squash/rebase merge.
+  - **Acceptable**: merge commit via PR when rebase is impractical.
+- Delete the feature branch after it is fully integrated into `main`.
+
+## Agent behavior
+
+- Before `/speckit-implement`, verify the current branch is the feature branch for the active spec — not `main`.
+- If on `main` with implementation work pending, create or checkout the correct feature branch first.
+- Do not push implementation commits to `main`; push the feature branch and integrate via rebase/merge.

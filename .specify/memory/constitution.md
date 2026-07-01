@@ -1,21 +1,16 @@
 <!--
 Sync Impact Report
 ==================
-Version change: (unratified template) → 1.0.0
-Modified principles: N/A (initial ratification)
+Version change: 1.0.0 → 1.0.1
+Modified principles: N/A
 Added sections:
-  - Core Principles (4): Code Quality, Testing Standards, UX Consistency, Performance
-  - Additional Constraints
-  - Development Workflow & Quality Gates
-  - Governance
-Removed sections: None (template placeholders replaced)
+  - Development Workflow & Quality Gates: Branch gate (feature-branch-only implementation)
+Removed sections: None
 Templates requiring updates:
-  - .specify/templates/plan-template.md ✅ updated
-  - .specify/templates/spec-template.md ✅ updated
-  - .specify/templates/tasks-template.md ✅ updated
-  - .specify/templates/checklist-template.md ✅ (no changes required)
-  - .specify/templates/commands/*.md ⚠ N/A (directory does not exist)
-  - README.md ⚠ N/A (file does not exist)
+  - .specify/templates/plan-template.md ✅ (no changes required)
+  - .specify/templates/spec-template.md ✅ (no changes required)
+  - .specify/templates/tasks-template.md ✅ (no changes required)
+  - .cursor/rules/feature-branch-workflow.mdc ✅ added
 Follow-up TODOs: None
 -->
 
@@ -83,11 +78,12 @@ The system MUST remain responsive under real-world video and analysis workloads.
 
 ## Development Workflow & Quality Gates
 
-1. **Spec gate**: User stories, acceptance scenarios, success criteria, and non-functional requirements (UX, performance) defined before planning.
-2. **Plan gate**: Constitution Check in plan.md MUST pass before Phase 0 research; re-check after Phase 1 design.
-3. **Implementation gate**: Lint clean, tests passing, no unresolved TODO in changed production paths.
-4. **Review gate**: PR description MUST map changes to user stories and cite test evidence; reviewers verify principles I–IV explicitly.
-5. **Release gate**: Quickstart validation and primary user journey smoke test MUST pass for the affected feature slice.
+1. **Branch gate**: Every spec implementation (`/speckit-specify` through `/speckit-implement`) MUST occur on a dedicated feature branch named for the spec (e.g. `001-foundation-and-dev-environment`). Implementation MUST NOT be committed directly to `main`; completed work is rebased or merged into `main` after quality gates pass.
+2. **Spec gate**: User stories, acceptance scenarios, success criteria, and non-functional requirements (UX, performance) defined before planning.
+3. **Plan gate**: Constitution Check in plan.md MUST pass before Phase 0 research; re-check after Phase 1 design.
+4. **Implementation gate**: Lint clean, tests passing, no unresolved TODO in changed production paths.
+5. **Review gate**: PR description MUST map changes to user stories and cite test evidence; reviewers verify principles I–IV explicitly.
+6. **Release gate**: Quickstart validation and primary user journey smoke test MUST pass for the affected feature slice.
 
 ## Governance
 
@@ -98,4 +94,4 @@ This constitution supersedes ad-hoc practices for the Golf Swing Analyzer projec
 - **Compliance review**: Every plan.md Constitution Check and every PR review MUST confirm adherence to principles I–IV; violations MUST be documented in Complexity Tracking or fixed before merge.
 - **Runtime guidance**: Feature-specific technical context lives in `specs/*/plan.md` and agent context files; this constitution defines non-negotiable quality bars.
 
-**Version**: 1.0.0 | **Ratified**: 2026-06-27 | **Last Amended**: 2026-06-27
+**Version**: 1.0.1 | **Ratified**: 2026-06-27 | **Last Amended**: 2026-06-27

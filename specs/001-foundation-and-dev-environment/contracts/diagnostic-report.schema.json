@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://golf-swing-analyzer.local/schemas/diagnostic-report.v1.json",
+  "title": "EnvironmentDiagnosticReport",
+  "description": "Machine-readable output of swing-analyzer environment diagnostics (spec 001)",
+  "type": "object",
+  "required": [
+    "generated_at",
+    "overall_status",
+    "performance_targets_waived",
+    "checks",
+    "effective_config_summary"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC ISO 8601 timestamp"
+    },
+    "overall_status": {
+      "type": "string",
+      "enum": ["pass", "pass_with_warnings", "fail"]
+    },
+    "performance_targets_waived": {
+      "type": "boolean",
+      "description": "True when GPU acceleration is absent (warning mode)"
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": { "$ref": "#/$defs/CapabilityCheckResult" }
+    },
+    "effective_config_summary": {
+      "type": "object",
+      "required": ["data_dir", "log_dir", "config_file"],
+      "additionalProperties": false,
+      "properties": {
+        "data_dir": { "type": "string" },
+        "log_dir": { "type": "string" },
+        "config_file": { "type": ["string", "null"] }
+      }
+    }
+  },
+  "$defs": {
+    "CapabilityCheckResult": {
+      "type": "object",
+      "required": ["name", "severity", "status", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": ["gpu", "ffmpeg", "opencv", "mediapipe", "storage"]
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["mandatory", "recommended"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "warning"]
+        },
+        "detected_version": { "type": ["string", "null"] },
+        "minimum_version": { "type": ["string", "null"] },
+        "message": { "type": "string" },
+        "remediation": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
