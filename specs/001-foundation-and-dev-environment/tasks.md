@@ -23,12 +23,12 @@ description: "Task list for foundation & local development environment"
 
 **Purpose**: Project initialization, dependency lockfile, and tooling configuration
 
-- [ ] T001 Create `src/swing_analyzer/` package skeleton per plan.md (`__init__.py`, `app/`, `config/`, `diagnostics/checks/`, `logging/`, `models/`)
-- [ ] T002 Initialize `pyproject.toml` with hatchling build, Python 3.11+, runtime deps (streamlit, pydantic-settings, platformdirs, structlog, opencv-python, mediapipe, pynvml, typer), dev deps (ruff, pytest, pytest-cov, jsonschema), and `[project.scripts]` entry `swing-analyzer = swing_analyzer.cli:app`
-- [ ] T003 [P] Configure ruff lint and format rules in `pyproject.toml`
-- [ ] T004 [P] Configure pytest and coverage (`--cov=swing_analyzer`, ≥80% target) in `pyproject.toml`
-- [ ] T005 Generate pinned `uv.lock` via `uv lock` and verify `uv sync` installs cleanly
-- [ ] T006 [P] Create `config/default.toml.example` documenting `data_dir`, `log_level`, and capability minimum versions
+- [X] T001 Create `src/swing_analyzer/` package skeleton per plan.md (`__init__.py`, `app/`, `config/`, `diagnostics/checks/`, `logging/`, `models/`)
+- [X] T002 Initialize `pyproject.toml` with hatchling build, Python 3.11+, runtime deps (streamlit, pydantic-settings, platformdirs, structlog, opencv-python, mediapipe, pynvml, typer), dev deps (ruff, pytest, pytest-cov, jsonschema), and `[project.scripts]` entry `swing-analyzer = swing_analyzer.cli:app`
+- [X] T003 [P] Configure ruff lint and format rules in `pyproject.toml`
+- [X] T004 [P] Configure pytest and coverage (`--cov=swing_analyzer`, ≥80% target) in `pyproject.toml`
+- [X] T005 Generate pinned `uv.lock` via `uv lock` and verify `uv sync` installs cleanly
+- [X] T006 [P] Create `config/default.toml.example` documenting `data_dir`, `log_level`, and capability minimum versions
 
 ---
 
@@ -38,14 +38,14 @@ description: "Task list for foundation & local development environment"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 [P] Implement `CapabilityCheckResult` enums and model in `src/swing_analyzer/models/capability.py`
-- [ ] T008 [P] Implement `EnvironmentDiagnosticReport` model and `overall_status` derivation in `src/swing_analyzer/models/diagnostic.py`
-- [ ] T009 Implement `ApplicationConfiguration` with XDG defaults and version minimums in `src/swing_analyzer/config/settings.py`
-- [ ] T010 Implement structlog JSON setup (stderr + file under `log_dir`) in `src/swing_analyzer/logging/setup.py`
-- [ ] T011 [P] Write failing unit tests for `overall_status` derivation in `tests/unit/test_diagnostic_report.py`
-- [ ] T012 [P] Write failing unit tests for settings defaults, XDG `data_dir`, and fail-fast validation in `tests/unit/test_settings.py`
-- [ ] T013 Implement report serialization helpers in `src/swing_analyzer/diagnostics/report.py`
-- [ ] T014 Make foundational unit tests in `tests/unit/test_diagnostic_report.py` and `tests/unit/test_settings.py` pass
+- [X] T007 [P] Implement `CapabilityCheckResult` enums and model in `src/swing_analyzer/models/capability.py`
+- [X] T008 [P] Implement `EnvironmentDiagnosticReport` model and `overall_status` derivation in `src/swing_analyzer/models/diagnostic.py`
+- [X] T009 Implement `ApplicationConfiguration` with XDG defaults and version minimums in `src/swing_analyzer/config/settings.py`
+- [X] T010 Implement structlog JSON setup (stderr + file under `log_dir`) in `src/swing_analyzer/logging/setup.py`
+- [X] T011 [P] Write failing unit tests for `overall_status` derivation in `tests/unit/test_diagnostic_report.py`
+- [X] T012 [P] Write failing unit tests for settings defaults, XDG `data_dir`, and fail-fast validation in `tests/unit/test_settings.py`
+- [X] T013 Implement report serialization helpers in `src/swing_analyzer/diagnostics/report.py`
+- [X] T014 Make foundational unit tests in `tests/unit/test_diagnostic_report.py` and `tests/unit/test_settings.py` pass
 
 **Checkpoint**: Models, config, and logging ready — user story implementation can begin
 
@@ -59,22 +59,22 @@ description: "Task list for foundation & local development environment"
 
 ### Tests for User Story 1 (REQUIRED — write FIRST, ensure FAIL before implementation)
 
-- [ ] T015 [P] [US1] Write contract test validating diagnostic JSON against `specs/001-foundation-and-dev-environment/contracts/diagnostic-report.schema.json` in `tests/contract/test_diagnostic_schema.py`
-- [ ] T016 [P] [US1] Write unit tests for each capability check (mocked subprocess/import) in `tests/unit/test_checks.py`
-- [ ] T017 [P] [US1] Write integration test for full diagnostic runner in `tests/integration/test_diagnostic_runner.py`
+- [X] T015 [P] [US1] Write contract test validating diagnostic JSON against `specs/001-foundation-and-dev-environment/contracts/diagnostic-report.schema.json` in `tests/contract/test_diagnostic_schema.py`
+- [X] T016 [P] [US1] Write unit tests for each capability check (mocked subprocess/import) in `tests/unit/test_checks.py`
+- [X] T017 [P] [US1] Write integration test for full diagnostic runner in `tests/integration/test_diagnostic_runner.py`
 
 ### Implementation for User Story 1
 
-- [ ] T018 [P] [US1] Implement GPU check (warning-only) in `src/swing_analyzer/diagnostics/checks/gpu.py`
-- [ ] T019 [P] [US1] Implement FFmpeg version check (mandatory) in `src/swing_analyzer/diagnostics/checks/ffmpeg.py`
-- [ ] T020 [P] [US1] Implement OpenCV version check (mandatory) in `src/swing_analyzer/diagnostics/checks/opencv.py`
-- [ ] T021 [P] [US1] Implement MediaPipe import/version check (mandatory) in `src/swing_analyzer/diagnostics/checks/mediapipe.py`
-- [ ] T022 [P] [US1] Implement storage writable probe and directory creation in `src/swing_analyzer/diagnostics/checks/storage.py`
-- [ ] T023 [US1] Implement diagnostic runner orchestrating all five checks in `src/swing_analyzer/diagnostics/runner.py`
-- [ ] T024 [US1] Implement `diagnose` Typer command with JSON stdout and exit codes per `contracts/cli-commands.md` in `src/swing_analyzer/cli.py`
-- [ ] T025 [US1] Implement Streamlit health/status view with pass/fail/warning badges in `src/swing_analyzer/app/health.py`
-- [ ] T026 [US1] Wire `python -m swing_analyzer` Streamlit entrypoint in `src/swing_analyzer/__main__.py`
-- [ ] T027 [US1] Verify all US1 tests pass and manual quickstart steps 1, 3, 4 succeed per `quickstart.md`
+- [X] T018 [P] [US1] Implement GPU check (warning-only) in `src/swing_analyzer/diagnostics/checks/gpu.py`
+- [X] T019 [P] [US1] Implement FFmpeg version check (mandatory) in `src/swing_analyzer/diagnostics/checks/ffmpeg.py`
+- [X] T020 [P] [US1] Implement OpenCV version check (mandatory) in `src/swing_analyzer/diagnostics/checks/opencv.py`
+- [X] T021 [P] [US1] Implement MediaPipe import/version check (mandatory) in `src/swing_analyzer/diagnostics/checks/mediapipe.py`
+- [X] T022 [P] [US1] Implement storage writable probe and directory creation in `src/swing_analyzer/diagnostics/checks/storage.py`
+- [X] T023 [US1] Implement diagnostic runner orchestrating all five checks in `src/swing_analyzer/diagnostics/runner.py`
+- [X] T024 [US1] Implement `diagnose` Typer command with JSON stdout and exit codes per `contracts/cli-commands.md` in `src/swing_analyzer/cli.py`
+- [X] T025 [US1] Implement Streamlit health/status view with pass/fail/warning badges in `src/swing_analyzer/app/health.py`
+- [X] T026 [US1] Wire `python -m swing_analyzer` Streamlit entrypoint in `src/swing_analyzer/__main__.py`
+- [X] T027 [US1] Verify all US1 tests pass and manual quickstart steps 1, 3, 4 succeed per `quickstart.md`
 
 **Checkpoint**: User Story 1 fully functional — diagnostic CLI + health UI independently testable
 

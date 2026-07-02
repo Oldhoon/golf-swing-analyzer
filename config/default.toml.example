@@ -1,0 +1,13 @@
+# Golf Swing Analyzer — example local configuration
+# Copy to ~/.config/golf-swing-analyzer/config.toml (or pass --config PATH)
+
+# Local data directory (XDG default: ~/.local/share/golf-swing-analyzer)
+# data_dir = "/custom/path/to/data"
+
+# Logging verbosity: DEBUG, INFO, WARNING, ERROR
+log_level = "INFO"
+
+# Minimum capability versions (semver)
+ffmpeg_minimum_version = "6.0.0"
+opencv_minimum_version = "4.8.0"
+mediapipe_minimum_version = "0.10.0"

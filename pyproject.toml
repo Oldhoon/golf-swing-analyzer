@@ -1,0 +1,67 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "golf-swing-analyzer"
+version = "0.1.0"
+description = "Offline-first golf swing analysis foundation"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit>=1.32.0",
+    "pydantic-settings>=2.2.0",
+    "platformdirs>=4.2.0",
+    "structlog>=24.1.0",
+    "opencv-python>=4.8.0",
+    "mediapipe>=0.10.0",
+    "pynvml>=11.5.0",
+    "typer>=0.12.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.4.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "jsonschema>=4.21.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.4.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "jsonschema>=4.21.0",
+]
+
+[project.scripts]
+swing-analyzer = "swing_analyzer.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/swing_analyzer"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["B008"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "--cov=swing_analyzer --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["swing_analyzer"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
