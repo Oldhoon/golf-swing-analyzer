@@ -4,16 +4,30 @@ import re
 from pathlib import Path
 from typing import Any, Literal
 
-from platformdirs import user_data_dir
+from platformdirs import user_config_dir, user_data_dir
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict
 from pydantic_settings.sources import TomlConfigSettingsSource
 
 LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR"]
+CONFIG_FILENAME = "config.toml"
 
 
 def default_data_dir() -> Path:
     return Path(user_data_dir("golf-swing-analyzer"))
+
+
+def default_config_path() -> Path:
+    return Path(user_config_dir("golf-swing-analyzer")) / CONFIG_FILENAME
+
+
+def resolve_config_file(explicit: Path | None) -> Path | None:
+    if explicit is not None:
+        return explicit
+    default = default_config_path()
+    if default.is_file():
+        return default
+    return None
 
 
 class ApplicationConfiguration(BaseSettings):
@@ -99,7 +113,8 @@ class ApplicationConfiguration(BaseSettings):
 
 
 def load_settings(config_file: Path | None = None) -> ApplicationConfiguration:
+    resolved = resolve_config_file(config_file)
     kwargs: dict[str, Any] = {}
-    if config_file is not None:
-        kwargs["config_file"] = config_file
+    if resolved is not None:
+        kwargs["config_file"] = resolved
     return ApplicationConfiguration(**kwargs)

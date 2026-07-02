@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib.metadata
 from unittest.mock import MagicMock, patch
 
 from swing_analyzer.config.settings import ApplicationConfiguration
@@ -65,3 +66,33 @@ def test_mediapipe_version_too_low(config: ApplicationConfiguration) -> None:
     with patch.dict("sys.modules", {"mediapipe": fake_mp}):
         result = check_mediapipe(config)
     assert result.status == CapabilityStatus.FAIL
+
+
+def test_mediapipe_fail_when_version_unknown(config: ApplicationConfiguration) -> None:
+    fake_mp = MagicMock(spec=[])
+    with (
+        patch.dict("sys.modules", {"mediapipe": fake_mp}),
+        patch(
+            "swing_analyzer.diagnostics.checks.mediapipe.importlib.metadata.version",
+            side_effect=importlib.metadata.PackageNotFoundError("mediapipe"),
+        ),
+    ):
+        result = check_mediapipe(config)
+    assert result.status == CapabilityStatus.FAIL
+    assert "Could not determine MediaPipe version" in result.message
+
+
+def test_mediapipe_uses_package_metadata_when_module_version_missing(
+    config: ApplicationConfiguration,
+) -> None:
+    fake_mp = MagicMock(spec=[])
+    with (
+        patch.dict("sys.modules", {"mediapipe": fake_mp}),
+        patch(
+            "swing_analyzer.diagnostics.checks.mediapipe.importlib.metadata.version",
+            return_value="0.10.35",
+        ),
+    ):
+        result = check_mediapipe(config)
+    assert result.status == CapabilityStatus.PASS
+    assert result.detected_version == "0.10.35"

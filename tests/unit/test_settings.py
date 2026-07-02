@@ -5,7 +5,12 @@ from pathlib import Path
 import pytest
 from platformdirs import user_data_dir
 
-from swing_analyzer.config.settings import ApplicationConfiguration, load_settings
+from swing_analyzer.config.settings import (
+    ApplicationConfiguration,
+    default_config_path,
+    load_settings,
+    resolve_config_file,
+)
 
 
 def test_default_data_dir_uses_xdg() -> None:
@@ -56,6 +61,46 @@ def test_load_settings_rejects_directory_as_config(tmp_path: Path) -> None:
     config_dir.mkdir()
     with pytest.raises(ValueError, match="not a file"):
         load_settings(config_file=config_dir)
+
+
+def test_resolve_config_file_uses_explicit_path(tmp_path: Path) -> None:
+    config_path = tmp_path / "config.toml"
+    config_path.write_text('log_level = "INFO"\n', encoding="utf-8")
+    assert resolve_config_file(config_path) == config_path
+
+
+def test_resolve_config_file_returns_none_when_no_default(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(
+        "swing_analyzer.config.settings.default_config_path",
+        lambda: tmp_path / "missing" / "config.toml",
+    )
+    assert resolve_config_file(None) is None
+
+
+def test_load_settings_from_xdg_default_config(tmp_path: Path, monkeypatch) -> None:
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    config_path = config_dir / "config.toml"
+    custom_data = tmp_path / "xdg-data"
+    config_path.write_text(
+        f'data_dir = "{custom_data}"\nlog_level = "ERROR"\n',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        "swing_analyzer.config.settings.default_config_path",
+        lambda: config_path,
+    )
+
+    config = load_settings()
+    assert config.data_dir == custom_data
+    assert config.log_level == "ERROR"
+    assert config.config_file == config_path
+
+
+def test_default_config_path_under_xdg_config_dir() -> None:
+    path = default_config_path()
+    assert path.name == "config.toml"
+    assert "golf-swing-analyzer" in str(path)
 
 
 def test_to_effective_dict_includes_resolved_paths(tmp_path: Path) -> None:

@@ -39,10 +39,13 @@ def test_probe_gpu_via_nvidia_smi() -> None:
 
 
 def test_probe_gpu_nvidia_smi_not_found() -> None:
-    with patch(
-        "swing_analyzer.diagnostics.checks.gpu.subprocess.run",
-        side_effect=FileNotFoundError,
-    ), patch.dict("sys.modules", {"pynvml": None}):
+    with (
+        patch(
+            "swing_analyzer.diagnostics.checks.gpu.subprocess.run",
+            side_effect=FileNotFoundError,
+        ),
+        patch.dict("sys.modules", {"pynvml": None}),
+    ):
         version, message = _probe_gpu()
 
     assert version is None
